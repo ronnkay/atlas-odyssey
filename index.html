@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#08131f" />
+  <meta name="description" content="A daily geography adventure. Explore the world, solve five clues, and see how far your knowledge can take you." />
+  <title>Atlas Odyssey — A Geography Adventure</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="Atlas Odyssey home"><span class="brand-mark">✦</span><span>ATLAS <b>ODYSSEY</b></span></a>
+    <nav><button class="nav-link active" data-view="home">Expedition</button><button class="nav-link" data-view="stats">My stats</button><button class="nav-link" data-view="how">How to play</button></nav>
+    <div class="top-pill"><span class="live-dot"></span> THE WORLD IS YOURS</div>
+  </header>
+
+  <main>
+    <section id="homeView" class="view active">
+      <div class="hero">
+        <div class="eyebrow"><span>✧</span> YOUR DAILY DOSE OF DISCOVERY</div>
+        <h1>How far can your<br><em>knowledge</em> take you?</h1>
+        <p class="hero-copy">Five clues. One world. Countless possible answers.<br>Think beyond the obvious and chart your own course.</p>
+        <div class="date-line" id="todayLabel"></div>
+      </div>
+      <div class="mode-grid">
+        <article class="mode-card daily-card">
+          <div class="card-top"><span class="mode-icon">☼</span><span class="mode-tag">THE DAILY CHALLENGE</span></div>
+          <h2>Today's Expedition</h2>
+          <p>Five clues. One shared challenge. Can you find the answers others overlook?</p>
+          <div class="mode-meta"><span>◷ No time limit</span><span>✦ 5 rounds</span></div>
+          <button id="dailyBtn" class="primary-btn">Begin expedition <span>↗</span></button>
+          <div id="dailyStatus" class="card-foot">A new journey awaits</div>
+        </article>
+        <article class="mode-card practice-card">
+          <div class="card-top"><span class="mode-icon">⌁</span><span class="mode-tag">GO YOUR OWN WAY</span></div>
+          <h2>Open Exploration</h2>
+          <p>Play as many rounds as you like. Sharpen your instincts and explore freely.</p>
+          <div class="mode-meta"><span>∞ Unlimited plays</span><span>✦ 5 rounds</span></div>
+          <button id="practiceBtn" class="secondary-btn">Start exploring <span>↗</span></button>
+          <div class="card-foot">Practice whenever you want</div>
+        </article>
+      </div>
+      <div class="how-strip"><div class="strip-icon">◎</div><div><b>The art of the unexpected</b><p>The obvious answer gets you started. The surprising answer takes you further.</p></div><button class="text-btn" data-view="how">Learn the rules ↗</button></div>
+    </section>
+
+    <section id="gameView" class="view">
+      <div class="game-heading"><button id="exitGame" class="back-btn">← Exit</button><div class="expedition-label" id="gameModeLabel">DAILY EXPEDITION</div><div class="round-count" id="roundCount">ROUND 01 / 05</div></div>
+      <div class="progress-track"><div id="progressFill"></div></div>
+      <div class="game-layout">
+        <aside class="clue-panel">
+          <div class="clue-kicker"><span>✧</span> YOUR NEXT DESTINATION</div>
+          <div class="round-number" id="roundNumber">01</div>
+          <h2 id="promptTitle">Find a country...</h2>
+          <p id="promptNote" class="prompt-note"></p>
+          <div class="selection-box"><span class="selection-label">YOUR SELECTED COUNTRY</span><strong id="selectedCountry">No country selected</strong><span id="selectionHint">Choose a country on the map</span></div>
+          <label class="search-label" for="countrySearch">Or search for a country</label>
+          <div class="search-wrap"><span>⌕</span><input id="countrySearch" type="search" placeholder="Search countries..." autocomplete="off"><div id="searchResults" class="search-results"></div></div>
+          <button id="submitBtn" class="primary-btn submit-btn" disabled>Lock in answer <span>→</span></button>
+          <button id="skipBtn" class="skip-btn">Skip this clue</button>
+          <div class="map-tip">TIP · Zoom in to explore smaller countries and islands.</div>
+        </aside>
+        <section class="map-panel"><div class="map-topline"><span>WORLD ATLAS</span><span><i></i> SELECT A COUNTRY</span></div><div id="map" role="application" aria-label="Interactive world map. Select a country to answer the clue."></div><div class="map-legend"><span><i class="legend-dot selected-dot"></i> Selected</span><span><i class="legend-dot"></i> Explore the map</span><span class="map-controls-hint">Scroll to zoom · Drag to move</span></div></section>
+      </div>
+      <div id="answerOverlay" class="overlay hidden"><div class="result-modal"><div class="result-symbol" id="resultSymbol">✦</div><div class="eyebrow">FIELD REPORT</div><h2 id="resultTitle">A discovery!</h2><p id="resultMessage"></p><div class="score-reveal"><strong id="roundScore">70</strong><span>KM EARNED</span></div><div id="rarityPill" class="rarity-pill">RARE</div><button id="nextBtn" class="primary-btn">Continue expedition <span>→</span></button></div></div>
+    </section>
+
+    <section id="resultsView" class="view">
+      <div class="results-hero"><div class="eyebrow">✧ EXPEDITION COMPLETE</div><h1>Your journey,<br><em>charted.</em></h1><p>You explored five clues. Here's how far you travelled.</p></div>
+      <div class="total-card"><span>TOTAL DISTANCE</span><strong id="totalScore">000</strong><small>KM</small><div id="resultMessageFinal" class="total-caption">Every great journey starts with curiosity.</div></div>
+      <div class="breakdown"><div class="section-heading"><h2>Your field notes</h2><span>THIS EXPEDITION</span></div><div id="resultRows"></div></div>
+      <div class="results-actions"><button id="playAgainBtn" class="primary-btn">Explore again ↗</button><button id="shareBtn" class="secondary-btn">Copy results ⧉</button><button id="homeBtn" class="quiet-btn">Back to home</button></div>
+    </section>
+
+    <section id="statsView" class="view info-view"><div class="eyebrow">✧ YOUR JOURNEY SO FAR</div><h1>A world of<br><em>possibilities.</em></h1><div class="stats-grid"><div class="stat-card"><span>EXPEDITIONS</span><strong id="statGames">0</strong></div><div class="stat-card"><span>TOTAL DISTANCE</span><strong id="statDistance">0 km</strong></div><div class="stat-card"><span>BEST JOURNEY</span><strong id="statBest">0 km</strong></div><div class="stat-card"><span>COUNTRIES FOUND</span><strong id="statCountries">0</strong></div></div><button class="primary-btn" data-view="home">Back to expedition ↗</button></section>
+
+    <section id="howView" class="view info-view"><div class="eyebrow">✧ THE FIELD GUIDE</div><h1>Adventure favors<br><em>the curious.</em></h1><p class="info-intro">Atlas Odyssey is a geography game about thinking beyond the first answer that comes to mind.</p><div class="rules-list"><article><span>01</span><div><h3>Read the clue</h3><p>Each clue describes something true about multiple countries. Your job is to find one that fits.</p></div></article><article><span>02</span><div><h3>Explore the atlas</h3><p>Click a country on the map or use the search box. You can change your selection until you lock it in.</p></div></article><article><span>03</span><div><h3>Choose your answer</h3><p>Submit one country per clue. A correct answer earns points based on its rarity. A miss earns zero.</p></div></article><article><span>04</span><div><h3>Reach the finish</h3><p>Complete five clues to see your total distance, rarity tiers, and a breakdown of your journey.</p></div></article></div><div class="rarity-guide"><h2>Rarity takes you further</h2><div><span class="rarity common">COMMON</span><b>40 km</b></div><div><span class="rarity uncommon">UNCOMMON</span><b>55 km</b></div><div><span class="rarity rare">RARE</span><b>70 km</b></div><div><span class="rarity elusive">ELUSIVE</span><b>85 km</b></div><div><span class="rarity legendary">LEGENDARY</span><b>100 km</b></div></div></section>
+  </main>
+  <footer><span>✦ ATLAS ODYSSEY</span><span>MADE FOR THE CURIOUS · NOT AFFILIATED WITH FARFLUNG</span></footer>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="app.js"></script>
+</body>
+</html>
